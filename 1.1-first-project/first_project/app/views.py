@@ -24,7 +24,7 @@ def time_view(request):
     from datetime import datetime
     # обратите внимание – здесь HTML шаблона нет, 
     # возвращается просто текст
-    current_time = datetime.now()
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     msg = f'Текущее время: {current_time}'
     return HttpResponse(msg)
 
@@ -34,8 +34,7 @@ def workdir_view(request):
     # по аналогии с `time_view`, напишите код,
     # который возвращает список файлов в рабочей 
     # директории
-    files = listdir()
     msg = f'Список файлов в рабочей директории: <br>'
-    for file in files:
+    for file in listdir():
         msg += file + '<br>'
     return HttpResponse(msg)
