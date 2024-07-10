@@ -17,4 +17,4 @@ settings_local.py
 
 ### OS specific ###
 .DS_Store
-/2.1-databases/work_with_database/.env
+.env
