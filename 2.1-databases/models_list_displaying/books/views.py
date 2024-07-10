@@ -20,7 +20,7 @@ def book_by_pub_date(request, pub_date):
     def get_dict_from_books(books):
         n = 0
         date = {}
-        for book in Book.objects.order_by('pub_date'):
+        for book in books:
             if book.pub_date.strftime('%Y-%m-%d') not in date.values():
                 date[n] = book.pub_date.strftime('%Y-%m-%d')
                 n += 1
@@ -30,7 +30,7 @@ def book_by_pub_date(request, pub_date):
         books = [book for book in Book.objects.filter(pub_date=pub_date)]
     except Book.DoesNotExist:
         return HttpResponseNotFound('Такой книги нет')
-    dates = get_dict_from_books(books)
+    dates = get_dict_from_books(Book.objects.order_by('pub_date'))
     current_page = list(filter(lambda x: dates[x] == pub_date.strftime('%Y-%m-%d'), dates))[0]
     if current_page != 0:
         prev = dates[current_page-1]
