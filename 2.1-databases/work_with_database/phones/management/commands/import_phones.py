@@ -13,5 +13,7 @@ class Command(BaseCommand):
             phones = list(csv.DictReader(file, delimiter=';'))
 
         for phone in phones:
-            # TODO: Добавьте сохранение модели
-            pass
+            phone['slug'] = phone['name'].lower().replace(' ', '-')
+            Phone.objects.create(**phone)
+
+        self.stdout.write(self.style.SUCCESS('Phones imported'))
