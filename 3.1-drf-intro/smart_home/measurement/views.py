@@ -4,14 +4,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from measurement.models import Sensor, Measurement
-from measurement.serializers import SensorDetailSerializer, MeasurementSerializer
+from measurement.serializers import SensorDetailSerializer, MeasurementSerializer, SensorsSerializer
 
 
 class SensorsList(APIView):
 
     def get(self, request):
         sensors = Sensor.objects.all()
-        serializer = SensorDetailSerializer(sensors, many=True)
+        serializer = SensorsSerializer(sensors, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -44,19 +44,18 @@ class SensorsDetail(APIView):
         return Response(status=204)
 
 
-class MeasurementCreate(APIView):
+class MeasurementList(APIView):
+
+    def get(self, request):
+        measurements = Measurement.objects.all()
+        serializer = MeasurementSerializer(measurements, many=True)
+        return Response(serializer.data)
 
     def post(self, request):
-        request.data['sensor'] = Sensor.objects.get(id=request.data['sensor'])
-        Measurement.objects.create(**request.data)
-        return Response(status=201)
-
-# @api_view(['POST'])
-# def measurement_create(request):
-#     sensor = Sensor.objects.get(id=request.data['sensor'])
-#     print(request.data)
-#     serializer = MeasurementSerializer(data=request.data)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response(serializer.data, status=201)
-#     return Response(serializer.errors, status=400)
+        # sensor_id = Sensor.objects.get(id=request.data['sensor'])
+        # request.data['sensor'] = sensor_id
+        serializer = MeasurementSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
